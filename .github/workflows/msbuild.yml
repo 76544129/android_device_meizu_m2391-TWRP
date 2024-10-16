@@ -1,0 +1,44 @@
+#此工作流程使用了未经开源代码库认证的操作。
+#它们由第三方提供，并受
+#单独的服务条款、隐私政策和支持
+#文档。
+
+名称:MSBuild
+
+开启:
+推送:
+分支:[ "安卓12.1 " ]
+拉取请求:
+分支:[ "安卓12.1 " ]
+
+环境:
+#解决方案文件相对于项目根目录的路径。
+解决方案文件路径:。
+
+#要生成的配置类型。
+#如果您需要覆盖多种配置类型，您可以将其转换为构建矩阵。
+# https://docs。github。com/actions/learn-github-actions/management-complex-workflow # using-a-build-matrix
+构建配置:发布
+
+权限:
+内容:阅读
+
+工作:
+构建:
+运行:windows-最新
+
+步骤:
+- 使用: actions/checkout@v4
+
+- name:将MSBuild添加到路径
+使用:microsoft/setup-msbuild@v1.0.2
+
+-名称:还原NuGet包
+工作目录:${{env。GITHUB_WORKSPACE}}
+奔跑: nuget restore ${{env。解决方案文件路径}}
+
+-名称:构建
+工作目录:${{env。GITHUB_WORKSPACE}}
+#在此处向MSBuild命令行添加附加选项（如平台或详细级别)。
+#请参见https://docs。微软。com/visual studio/msbuild/msbuild-命令行-参考
+run:msbuild/m/p:Configuration = $ { { env。BUILD_CONFIGURATION}} ${{env。解决方案文件路径}}
